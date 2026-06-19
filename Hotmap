@@ -1,0 +1,114 @@
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# =====================================================================
+# STEP 1: PREPARATION AND BORROWING FEATURES
+# =====================================================================
+research_q3 = research_q1.copy()
+
+# Hiramin ang Top 3 Demographics mula sa Feature Importance
+research_q3['DEGREE'] = dataframe['DEGREE']
+research_q3['HOMPOP'] = dataframe['HOMPOP']
+research_q3['MAINSTAT'] = dataframe['MAINSTAT']
+
+# Compute the Gap
+research_q3['income_class_gap'] = research_q3['TOPBOT'] - research_q3['INCOME']
+
+# Linisin ang blanks para sa lahat ng gagamiting columns
+clean_df = research_q3.dropna(subset=['income_class_gap', 'INCOME', 'DEGREE', 'HOMPOP', 'MAINSTAT'])
+
+
+# =====================================================================
+# HEATMAP 1: INCOME × DEGREE
+# =====================================================================
+pivot_inc_deg = clean_df.pivot_table(
+    values="income_class_gap", 
+    index="INCOME", 
+    columns="DEGREE", 
+    aggfunc="mean",
+    observed=False  # Para mawala ang warning
+)
+
+plt.figure(figsize=(12, 6))
+sns.heatmap(
+    pivot_inc_deg,
+    annot=True,
+    cmap="coolwarm",
+    center=0,
+    fmt=".2f",
+    linewidths=0.5,
+    cbar_kws={"label": "Mean Income-Class Gap"},
+)
+plt.title(
+    "Magnitude and Direction of Income-Class Gap:\nINCOME × DEGREE Intersection",
+    fontsize=14,
+    pad=15,
+)
+plt.ylabel("Objective Income Level (INCOME)")
+plt.xlabel("Educational Attainment (DEGREE)")
+plt.tight_layout()
+plt.show()
+
+
+# =====================================================================
+# HEATMAP 2: INCOME × HOMPOP
+# =====================================================================
+pivot_inc_pop = clean_df.pivot_table(
+    values="income_class_gap", 
+    index="INCOME", 
+    columns="HOMPOP", 
+    aggfunc="mean",
+    observed=False  # Para mawala ang warning
+)
+
+plt.figure(figsize=(12, 6))
+sns.heatmap(
+    pivot_inc_pop,
+    annot=True,
+    cmap="coolwarm",
+    center=0,
+    fmt=".2f",
+    linewidths=0.5,
+    cbar_kws={"label": "Mean Income-Class Gap"},
+)
+plt.title(
+    "Magnitude and Direction of Income-Class Gap:\nINCOME × HOMPOP Intersection",
+    fontsize=14,
+    pad=15,
+)
+plt.ylabel("Objective Income Level (INCOME)")
+plt.xlabel("Household Population (HOMPOP)")
+plt.tight_layout()
+plt.show()
+
+
+# =====================================================================
+# HEATMAP 3: INCOME × MAINSTAT
+# =====================================================================
+pivot_inc_mainstat = clean_df.pivot_table(
+    values="income_class_gap", 
+    index="INCOME", 
+    columns="MAINSTAT", 
+    aggfunc="mean",
+    observed=False  # Para mawala ang warning
+)
+
+plt.figure(figsize=(12, 6))
+sns.heatmap(
+    pivot_inc_mainstat,
+    annot=True,
+    cmap="coolwarm",
+    center=0,
+    fmt=".2f",
+    linewidths=0.5,
+    cbar_kws={"label": "Mean Income-Class Gap"},
+)
+plt.title(
+    "Magnitude and Direction of Income-Class Gap:\nINCOME × MAINSTAT Intersection",
+    fontsize=14,
+    pad=15,
+)
+plt.ylabel("Objective Income Level (INCOME)")
+plt.xlabel("Main Labor Force Status (MAINSTAT)")
+plt.tight_layout()
+plt.show()
